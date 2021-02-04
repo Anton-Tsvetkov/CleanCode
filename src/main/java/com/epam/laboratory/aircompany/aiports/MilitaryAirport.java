@@ -17,7 +17,7 @@ public class MilitaryAirport extends Airport {
 
     @Override
     public Plane getPlaneWithMaxCapacity() {
-        List<MilitaryPlane> militaryPlanes = getMilitaryPlanes();
+        List<MilitaryPlane> militaryPlanes = (List<MilitaryPlane>) getMilitaryPlanes();
         MilitaryPlane planeWithMaxCapacity = militaryPlanes.get(0);
         for (MilitaryPlane militaryPlane : militaryPlanes) {
             if (militaryPlane.getMaxLoadCapacity() > planeWithMaxCapacity.getMaxLoadCapacity()) {
@@ -28,30 +28,29 @@ public class MilitaryAirport extends Airport {
     }
 
 
-    public List<MilitaryPlane> getMilitaryPlanes() {
-        List<MilitaryPlane> militaryPlanes = new ArrayList<>();
+    private List<? extends Plane> getSomePlanes(Class<? extends Plane> somePlane) {
+        List<Plane> planes = new ArrayList<>();
         for (Plane plane : MILITARY_PLANES) {
-            if (plane instanceof MilitaryPlane) {
-                militaryPlanes.add((MilitaryPlane) plane);
+            if (plane.getClass() == somePlane) {
+                planes.add(plane);
             }
         }
-        return militaryPlanes;
+        return planes;
     }
 
-    public List<ExperimentalPlane> getExperimentalPlanes() {
-        List<ExperimentalPlane> experimentalPlanes = new ArrayList<>();
-        for (Plane plane : MILITARY_PLANES) {
-            if (plane instanceof ExperimentalPlane) {
-                experimentalPlanes.add((ExperimentalPlane) plane);
-            }
-        }
-        return experimentalPlanes;
+
+    public List<? extends Plane> getMilitaryPlanes() {
+        return getSomePlanes(MilitaryPlane.class);
+    }
+
+    public List<? extends Plane> getExperimentalPlanes() {
+        return getSomePlanes(ExperimentalPlane.class);
     }
 
 
     private List<MilitaryPlane> getPlanesByMilitaryType(MilitaryType type) {
         List<MilitaryPlane> planesOfSpecifiedType = new ArrayList<>();
-        List<MilitaryPlane> militaryPlanes = getMilitaryPlanes();
+        List<MilitaryPlane> militaryPlanes = (List<MilitaryPlane>) getMilitaryPlanes();
         for (MilitaryPlane plane : militaryPlanes) {
             if (plane.getMilitaryType() == type) {
                 planesOfSpecifiedType.add(plane);
